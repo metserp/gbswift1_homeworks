@@ -47,9 +47,9 @@ print("проверка квадратного уравнения c дискри
 printT1Result(a: 1, b: 2, c: 1, dis: zero.dis, x1: zero.x1, x2: zero.x2)
 print()
 //check quadratic with positive discriminant
-let positive = quadratic(a:1320, b:223, c:1192)
+let positive = quadratic(a:4.88, b:-8.64, c:-21.66)
 print("проверка квадратного уравнения c дискриминантом больше нуля")
-printT1Result(a: 1, b: 2, c: 1, dis: positive.dis, x1: positive.x1, x2: positive.x2)
+printT1Result(a: 4.88, b: -8.64, c: -21.66, dis: positive.dis, x1: positive.x1, x2: positive.x2)
 print()
 //random checks
 print("10 псевдослучайных уравнений")
