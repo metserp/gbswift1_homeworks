@@ -37,7 +37,26 @@ func pluralForm(number: UInt, forms: [String]) -> String {
     return number % 10 == 1 && number % 100 != 11 ? forms[0] :
         (number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20) ? forms[1] : forms[2])
 }
-
+func isNumeric(_ input: String) -> Bool {
+    return Double(input) != nil
+}
+func validateWhileGetPositiveNumeric(input:String)->String{
+    if isNumeric(input) && Double(input)! > 0 {
+        return input
+    }
+    var output:String = ""
+    print("Пожалуйста введите положительное число")
+    while let str = readLine() {
+        if isNumeric(str) && Double(str)! > 0{
+            output = str
+            break
+        }else{
+            print("Пожалуйста введите положительное число")
+        }
+        
+    }
+    return output
+}
 
 /*************
  ****Views****
@@ -205,6 +224,9 @@ func taskThree(){
     }
    
     func calculateSumAfterYears (sum:Double,percent:Double, years:UInt)-> Double{
+        if (sum < 0 || percent < 0 || years < 1) {
+            return 0
+        }
         if (years <= 1) {
             return sum
         }
@@ -232,11 +254,12 @@ func taskThree(){
     //проверка по условиям задачи
     print("Пользователь вводит сумму вклада в банк и годовой процент. Найти сумму вклада через 5 лет")
     print("Введите сумму")
-    let userInputSum:String = readLine() ?? "0"
+    let userInputSum:String = validateWhileGetPositiveNumeric(input: readLine() ?? "0")
     print()
     print("Введите годовые проценты")
-    let userInputYearPercent:String = readLine() ?? "0"
+    let userInputYearPercent:String = validateWhileGetPositiveNumeric(input: readLine() ?? "0")
     print()
+    
     //todo: Ввод символов из которых нельзя получить число - крашит приложение
     let userSum:Double = Double(userInputSum)!
     let userYearPercent:Double = Double(userInputYearPercent)!
@@ -247,26 +270,29 @@ func taskThree(){
     //считать пока пользователь не прервет выполнение
     print("Для продолжения рассчетов по вкладам нажмите enter")
     print("Для выхода из программы введите q и нажмите enter")
-    while readLine() != "q"  {
+    while let input = readLine()  {
+        if (input == "q" || input == "й" ){
+            break
+        }
          //todo Ввод символов из которых нельзя получить число - крашит приложение
         print("Введите сумму")
-        let userInputSum:String = readLine() ?? "0"
+        let userInputSum:String = validateWhileGetPositiveNumeric(input: readLine() ?? "0")
         print()
         print("Введите годовые проценты")
-        let userInputYearPercent:String = readLine() ?? "0"
+        let userInputYearPercent:String = validateWhileGetPositiveNumeric(input: readLine() ?? "0.01")
         print()
         print("Введите срок в полных годах")
-        let userInputYears:String = readLine() ?? "1"
+        let userInputYears:String = validateWhileGetPositiveNumeric(input: readLine() ?? "1")
         print()
-        let userSum:Double? = Double(userInputSum)!
-        let userYearPercent:Double? = Double(userInputYearPercent)!
-        let userYears:UInt? = UInt(userInputYears)!
-        if userSum == nil || userYearPercent == nil || userYears == nil {
+        let userSum:Double = Double(userInputSum) ?? 0
+        let userYearPercent:Double = Double(userInputYearPercent) ?? 0
+        let userYears:UInt = UInt(userInputYears) ?? 0
+        if (userSum < 0 || userYearPercent < 0 || userYears < 1) {
             print("Введены не корректные данные")
             continue
         }
-        let userInputResult:Double = calculateSumAfterYears(sum: userSum!, percent: userYearPercent!, years: userYears!)
-        printT3Result(sum: userSum!, percent: userYearPercent!, years: userYears!, sumAfterYears: userInputResult)
+        let userInputResult:Double = calculateSumAfterYears(sum: userSum, percent: userYearPercent, years: userYears)
+        printT3Result(sum: userSum, percent: userYearPercent, years: userYears, sumAfterYears: userInputResult)
         print("Для продолжения рассчетов по вкладам нажмите enter")
         print("Для выхода из программы введите q и нажмите enter")
     }
