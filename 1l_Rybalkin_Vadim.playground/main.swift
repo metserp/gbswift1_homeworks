@@ -156,5 +156,95 @@ func taskTwo(){
     }
     
 }
+/**************************************************************************************************
+ ****Пользователь вводит сумму вклада в банк и годовой процент. Найти сумму вклада через 5 лет.****
+ **************************************************************************************************/
+func taskThree(){
+    func addYearPercent(sum:Double, percent:Double)-> Double{
+        return sum * (1 + percent/100)
+    }
+   
+    func calculateSumAfterYears (sum:Double,percent:Double, years:UInt)-> Double{
+        if (years <= 1) {
+            return sum
+        }
+        var newSum:Double  = sum
+        for _ in 1...years {
+            newSum += addYearPercent(sum: sum, percent: percent)
+        }
+        return newSum
+    }
+    
+    func printT3Result(sum:Double, percent:Double, years:UInt, sumAfterYears:Double){
+        //https://gist.github.com/youmee/bc23dd6088e59609609f
+        func pluralForm(number: UInt, forms: [String]) -> String {
+            return number % 10 == 1 && number % 100 != 11 ? forms[0] :
+                (number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20) ? forms[1] : forms[2])
+        }
+        let pluralYears: [String] = ["год", "года", "лет"]
+        let pluralPercents: [String] = ["процент","процента","процентов"]
+        let numberFormater:NumberFormatter = NumberFormatter()
+        numberFormater.numberStyle = .currency
+        numberFormater.allowsFloats = true
+        numberFormater.groupingSize = 3
+        numberFormater.maximumFractionDigits = 2
+        print("Даны условия вклада:")
+        print("Начальная cумма вклада: \(numberFormater.string(from: sum as NSNumber) ?? "0")")
+        print("Вклад сделан на \(years) \(pluralForm(number: years, forms: pluralYears )) под \(percent) \(pluralForm(number: UInt(percent), forms: pluralPercents ))")
+        print("Через \(years) \(pluralForm(number: years, forms: pluralYears)) на счету будет \(numberFormater.string(from: sumAfterYears as NSNumber) ?? "0") ")
+        print()
+        
+    }
+    //проверка по условиям задачи
+    print("Введите сумму")
+    let userInputSum:String = readLine() ?? "0"
+    print()
+    print("Введите годовые проценты")
+    let userInputYearPercent:String = readLine() ?? "0"
+    print()
+    //todo: Ввод символов из которых нельзя получить число - крашит приложение
+    let userSum:Double = Double(userInputSum)!
+    let userYearPercent:Double = Double(userInputYearPercent)!
+    
+    let userInputResult:Double = calculateSumAfterYears(sum: userSum, percent: userYearPercent, years: 5)
+    printT3Result(sum: userSum, percent: userYearPercent, years: 5, sumAfterYears: userInputResult)
+    print("10 вычислений с псевдослучайными условиями")
+    for i in 1...10{
+        let randomSum:Double = round(Double.random(in: 1...5000000000)/0.01)*0.01
+        let randomPercent:Double = round(Double.random(in: 0.01...100)/0.01)*0.01
+        let randomYears:UInt = UInt.random(in: 0...100)
+        let result:Double = calculateSumAfterYears(sum: randomSum, percent: randomPercent, years: randomYears)
+        print("Вклад №\(i)")
+        printT3Result(sum: randomSum, percent: randomPercent, years: randomYears, sumAfterYears: result)
+        print()
+    }
+    //считать пока пользователь не прервет выполнение
+    print("для продолжения рассчетов по вкладам нажмите enter")
+    print("Для выхода из программы введите q и нажмите enter")
+    while readLine() != "q"  {
+         //todo Ввод символов из которых нельзя получить число - крашит приложение
+        print("Введите сумму")
+        let userInputSum:String = readLine() ?? "0"
+        print()
+        print("Введите годовые проценты")
+        let userInputYearPercent:String = readLine() ?? "0"
+        print()
+        print("Введите срок в полных годах")
+        let userInputYears:String = readLine() ?? "1"
+        print()
+        let userSum:Double? = Double(userInputSum)!
+        let userYearPercent:Double? = Double(userInputYearPercent)!
+        let userYears:UInt? = UInt(userInputYears)!
+        if userSum == nil || userYearPercent == nil || userYears == nil {
+            print("Введены не корректные данные")
+            continue
+        }
+        let userInputResult:Double = calculateSumAfterYears(sum: userSum!, percent: userYearPercent!, years: userYears!)
+        printT3Result(sum: userSum!, percent: userYearPercent!, years: userYears!, sumAfterYears: userInputResult)
+        print("Для выхода из программы введите q и нажмите enter")
+    }
+    print("Выхожу...")
+}
 taskOne()
 taskTwo()
+taskThree()
