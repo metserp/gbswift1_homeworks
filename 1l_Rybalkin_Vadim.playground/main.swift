@@ -232,7 +232,7 @@ func taskThree(){
         }
         var newSum:Double  = sum
         for _ in 1...years {
-            newSum += addYearPercent(sum: sum, percent: percent)
+            newSum = addYearPercent(sum: newSum, percent: percent)
         }
         return newSum
     }
